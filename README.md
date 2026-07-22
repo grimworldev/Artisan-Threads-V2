@@ -21,12 +21,12 @@ It includes an **LLM-driven validation engine** that checks uploaded product ima
 
 | Layer | Technology |
 | :--- | :--- |
-| **Backend** | [Laravel 11](https://laravel.com/) |
-| **Frontend** | [React](https://react.dev/) |
-| **Routing / Glue** | [Inertia.js](https://inertiajs.com/) |
+| **Backend** | [Laravel 13](https://laravel.com/) |
+| **Frontend** | [React 19](https://react.dev/) |
+| **Routing / Glue** | [Inertia.js 3](https://inertiajs.com/) |
 | **Styling** | [Tailwind CSS](https://tailwindcss.com/) |
 | **AI / LLM** | OpenAI API / Gemini API integration |
-| **Database** | MySQL / PostgreSQL |
+| **Database** | MySQL |
 
 ---
 
