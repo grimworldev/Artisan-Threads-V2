@@ -40,6 +40,23 @@ type Props = {
     breadcrumbs?: BreadcrumbItem[];
 };
 
+type UserInformation = {
+    first_name: string;
+    last_name: string;
+};
+
+type AuthUser = {
+    username: string;
+    avatar_url?: string | null;
+    information?: UserInformation | null;
+};
+
+type AuthProps = {
+    auth: {
+        user: AuthUser | null;
+    };
+};
+
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
@@ -57,22 +74,23 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-const rightNavItems: NavItem[] = [
-];
+const rightNavItems: NavItem[] = [];
 
 const activeItemStyles =
     'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
 export function AppHeader({ breadcrumbs = [] }: Props) {
-    const page = usePage();
-    const { auth } = page.props;
+    const { auth } = usePage<AuthProps>().props;
     const getInitials = useInitials();
     const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
+    const fullName = auth.user?.information
+        ? `${auth.user.information.first_name} ${auth.user.information.last_name}`
+        : (auth.user?.username ?? '');
 
     return (
         <>
             <div className="border-b border-sidebar-border/80">
-                <div className="mx-auto flex h-16 items-center px-10">
+                <div className="mx-auto flex h-16 items-center px-20 md:px-14">
                     {/* Mobile Menu */}
                     <div className="lg:hidden">
                         <Sheet>
@@ -210,6 +228,9 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 ))}
                             </div>
                         </div>
+                        <span className="capitalize">
+                            {fullName.toLowerCase()}
+                        </span>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
@@ -218,11 +239,14 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 >
                                     <Avatar className="size-8 overflow-hidden rounded-full">
                                         <AvatarImage
-                                            src={auth.user?.avatar}
-                                            alt={auth.user?.name}
+                                            src={
+                                                auth.user?.avatar_url ??
+                                                undefined
+                                            }
+                                            alt={fullName}
                                         />
                                         <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                                            {getInitials(auth.user?.name ?? '')}
+                                            {getInitials(fullName)}
                                         </AvatarFallback>
                                     </Avatar>
                                 </Button>

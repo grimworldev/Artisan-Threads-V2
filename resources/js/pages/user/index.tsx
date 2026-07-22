@@ -32,7 +32,6 @@ function getInitials(first: string, last: string) {
 }
 
 export default function Index({ user }: Props) {
-    console.log(user)
     return (
         <>
             <Head title="Profile" />
