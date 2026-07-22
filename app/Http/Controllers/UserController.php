@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserInformations;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = UserInformations::with('user:id,username,email,uuid')
+            ->where('user_id', '!=', Auth::id())
+            ->get();
+
+        return inertia('user/index', [
+            'user' => $users,
+        ]);
     }
 
     /**

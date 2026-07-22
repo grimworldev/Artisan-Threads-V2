@@ -6,6 +6,7 @@ use App\Models\UserInformations;
 use Illuminate\Http\Request;
 
 class UserInformationsController extends Controller
+
 {
     /**
      * Display a listing of the resource.

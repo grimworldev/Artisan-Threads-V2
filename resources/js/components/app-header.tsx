@@ -34,6 +34,8 @@ import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
+import users from '@/routes/users';
+import profiles from '@/routes/profiles';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
@@ -44,6 +46,19 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Browse',
+        href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Users',
+        href: users.index(),
+    },
+    {
+        title: 'Profile',
+        href: profiles.index(),
     },
 ];
 
