@@ -1,5 +1,4 @@
-# Create a README.md file directly
-readme_content = """# 🛒 Local Market AI — Multi-Vendor E-Commerce Boilerplate
+Local Market AI — Multi-Vendor E-Commerce Boilerplate
 
 A modern full-stack boilerplate built with **Laravel**, **React**, and **Inertia.js**, designed to empower local vendors and small businesses to showcase, manage, and sell their products. 
 
