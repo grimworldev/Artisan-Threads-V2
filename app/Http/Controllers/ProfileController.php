@@ -46,7 +46,7 @@ class ProfileController extends Controller
      */
     public function show(string $uuid)
     {
-        $user = User::where('uuid', $uuid)
+        $user = User::where('username', $uuid)
             ->with('information')
             ->firstOrFail();
 

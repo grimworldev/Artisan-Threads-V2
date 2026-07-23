@@ -83,7 +83,7 @@ export default function Index({ user }: Props) {
                                         variant="outline"
                                         className="mt-auto w-full"
                                     >
-                                        <Link href={`/profiles/${info.user.uuid}`}>
+                                        <Link href={`/profiles/${info.user.username}`}>
                                             View profile
                                         </Link>
                                     </Button>
