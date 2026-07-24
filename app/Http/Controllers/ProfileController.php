@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserInformations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -14,14 +15,12 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $user = Auth::user()->load([
-            'information',
-            // 'documents', // uncomment once the UserDocument relation exists on User
-            // 'shops',     // uncomment once the Shop relation exists on User
-        ]);
+        $users = UserInformations::with('user:id,username,email,uuid')
+            ->where('user_id', '!=', Auth::id())
+            ->get();
 
-        return inertia('profile/index', [
-            'user' => $user,
+        return inertia('profile/profiles', [
+            'user' => $users,
         ]);
     }
 
@@ -46,8 +45,16 @@ class ProfileController extends Controller
      */
     public function show(string $uuid)
     {
+        if (Auth::check() && Auth::user()->username === $uuid) {
+            $user = Auth::user()->load(['information', 'shop', 'documents']);
+
+            return inertia('profile/index', [
+                'user' => $user,
+            ]);
+        }
+
         $user = User::where('username', $uuid)
-            ->with('information')
+            ->with(['information', 'shop'])
             ->firstOrFail();
 
         return inertia('profile/show', [
@@ -135,5 +142,25 @@ class ProfileController extends Controller
         $user->update(['cover_path' => null]);
 
         return back()->with('success', 'Cover photo removed.');
+    }
+
+    /**
+     * Rendering the /profiles/business/registration and all.
+     */
+    public function businessCreate($username)
+    {
+        if (!Auth::check() || Auth::user()->username !== $username) {
+            abort(404);
+        }
+
+        return inertia('profile/partials/business-registration');
+    }
+    public function documentCreate($username)
+    {
+        if (!Auth::check() || Auth::user()->username !== $username) {
+            abort(404);
+        }
+
+        return inertia('profile/partials/profile-verification');
     }
 }

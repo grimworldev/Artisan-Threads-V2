@@ -35,6 +35,7 @@ import { cn, toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import users from '@/routes/users';
+import profiles from '@/routes/profiles';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
@@ -70,7 +71,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Users',
-        href: users.index(),
+        href: profiles.index(),
     },
 ];
 
@@ -90,7 +91,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
     return (
         <>
             <div className="border-b border-sidebar-border/80">
-                <div className="mx-auto flex h-16 items-center px-20 md:px-14">
+                <div className="mx-auto flex h-16 items-center px-4 lg:px-20 md:px-14 sm:px-4">
                     {/* Mobile Menu */}
                     <div className="lg:hidden">
                         <Sheet>
@@ -228,7 +229,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 ))}
                             </div>
                         </div>
-                        <span className="capitalize">
+                        <span className="hidden md:block capitalize ">
                             {fullName.toLowerCase()}
                         </span>
                         <DropdownMenu>

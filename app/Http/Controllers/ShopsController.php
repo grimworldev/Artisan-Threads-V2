@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Shops;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ShopsController extends Controller
 {
@@ -28,7 +30,35 @@ class ShopsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Shops::where('user_id', Auth::id())->exists()) {
+            return back()->with('error', 'You have already registered a business.');
+        }
+
+        $validated = $request->validate([
+            'business_name' => ['required', 'string', 'max:255'],
+            'business_description' => ['required', 'string', 'max:2000'],
+            'logo' => ['nullable', 'file', 'mimes:jpeg,jpg,png,svg', 'max:5120'],
+            'region' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'barangay' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
+            'contact_no' => ['required', 'string', 'max:20'],
+        ]);
+
+        $shop = new Shops($validated);
+        $shop->user_id = Auth::id();
+
+        if ($request->hasFile('logo')) {
+            $directory = 'users/' . Auth::user()->uuid . '/shop-logos';
+            Storage::disk('public')->deleteDirectory($directory);
+            $shop->logo_path = $request->file('logo')->store($directory, 'public');
+        }
+
+        $shop->save();
+
+        return redirect()
+            ->route('profiles.show', Auth::user()->username)
+            ->with('success', 'Business registered successfully.');
     }
 
     /**

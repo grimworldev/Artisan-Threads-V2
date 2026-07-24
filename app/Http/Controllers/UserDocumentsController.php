@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserDocuments;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserDocumentsController extends Controller
 {
@@ -28,7 +29,28 @@ class UserDocumentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $isPassport = $request->input('document_type') === 'philippine_passport';
+
+        $validated = $request->validate([
+            'document_type' => 'required|string|in:philippine_passport,philsys_national_id,drivers_license,umid,prc_id,postal_id,voters_id,tin_id,philhealth_id',
+            'file' => 'required|file|mimes:jpg,jpeg,png|max:5120',
+            'file_2' => [$isPassport ? 'prohibited' : 'required', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
+        ]);
+
+        $path = $request->file('file')->store('verification-documents', 'public');
+        $path2 = $isPassport ? null : $request->file('file_2')->store('verification-documents', 'public');
+
+        $request->user()->documents()->create([
+            'document_type' => $validated['document_type'],
+            'file_path' => $path,
+            'original_filename' => $request->file('file')->getClientOriginalName(),
+            'file_path_2' => $path2,
+            'original_filename_2' => $isPassport ? null : $request->file('file_2')->getClientOriginalName(),
+        ]);
+
+        return redirect()
+            ->route('profiles.show', Auth::user()->username)
+            ->with('success', 'Business registered successfully.');
     }
 
     /**

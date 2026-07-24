@@ -1,10 +1,17 @@
 import { Head, router } from '@inertiajs/react';
 import { dashboard } from '@/routes';
-import { Camera, MoreHorizontal, Upload, Trash2 } from 'lucide-react';
+import { Camera, MoreHorizontal, Upload, Trash2, Store } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { ImageCropModal } from '@/components/image-crop-modal';
 import { getCroppedImageBlob, type PixelCrop } from '@/lib/cropImage';
 import type { Area } from 'react-easy-crop';
+import { Business } from './components/business';
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from '@/components/ui/tabs';
 
 type UserInformation = {
     id: number;
@@ -29,6 +36,21 @@ type User = {
     cover_path: string | null;
     avatar_url?: string | null;
     cover_url?: string | null;
+
+    shop?: {
+        id: number;
+        uuid: string;
+        business_name: string;
+        business_description: string | null;
+        logo_path: string | null;
+        logo_url?: string | null;
+        region: string | null;
+        city: string | null;
+        barangay: string | null;
+        address: string | null;
+        contact_no: string | null;
+        status: number;
+    } | null;
 };
 
 type Props = {
@@ -57,19 +79,17 @@ export default function Index({ user }: Props) {
     const [coverError, setCoverError] = useState<string | null>(null);
     const [coverMenuOpen, setCoverMenuOpen] = useState(false);
 
-    // Raw (uncropped) image sources, staged for the crop modal
     const [rawAvatarSrc, setRawAvatarSrc] = useState<string | null>(null);
     const [rawCoverSrc, setRawCoverSrc] = useState<string | null>(null);
 
     const fullName = user.information
         ? [user.information.first_name, user.information.last_name]
-              .filter(Boolean)
-              .join(' ')
+            .filter(Boolean)
+            .join(' ')
         : user.username;
 
     const activeCover = coverPreview ?? user.cover_url;
 
-    // Close the cover dropdown when clicking anywhere outside it
     useEffect(() => {
         if (!coverMenuOpen) return;
 
@@ -98,7 +118,7 @@ export default function Index({ user }: Props) {
 
         setError(null);
         setRawAvatarSrc(URL.createObjectURL(file));
-        e.target.value = ''; // allow re-selecting the same file later
+        e.target.value = '';
     }
 
     async function confirmAvatarCrop(pixels: Area) {
@@ -111,7 +131,6 @@ export default function Index({ user }: Props) {
         setPreview(URL.createObjectURL(blob));
         setRawAvatarSrc(null);
 
-        // Wire this up to your actual upload route, e.g.:
         const formData = new FormData();
         formData.append('avatar', blob, 'avatar.jpg');
         router.post('/profiles/avatar', formData, {
@@ -145,7 +164,6 @@ export default function Index({ user }: Props) {
         setCoverPreview(URL.createObjectURL(blob));
         setRawCoverSrc(null);
 
-        // Wire this up to your actual upload route, e.g.:
         const formData = new FormData();
         formData.append('cover', blob, 'cover.jpg');
         router.post('/profiles/cover', formData, {
@@ -158,18 +176,16 @@ export default function Index({ user }: Props) {
         setCoverPreview(null);
         setCoverError(null);
         setCoverMenuOpen(false);
-
-        // Wire this up to your actual remove route, e.g.:
         router.delete('/profiles/cover', { preserveScroll: true });
     }
 
     return (
         <>
             <Head title="Profile" />
-            <div className="my-10 flex flex-col gap-6">
+            <div className="my-6 flex flex-col gap-4">
                 <div className="overflow-hidden rounded-lg border">
-                    {/* Banner */}
-                    <div className="group relative h-48 w-full bg-olive-500 sm:h-64">
+                    {/* Banner - reduced height */}
+                    <div className="group relative h-32 w-full bg-olive-500 sm:h-40">
                         {activeCover && (
                             <img
                                 src={activeCover}
@@ -177,10 +193,9 @@ export default function Index({ user }: Props) {
                                 className="h-full w-full object-cover"
                             />
                         )}
-                        {/* Three-dot menu trigger */}
                         <div
                             ref={coverMenuRef}
-                            className="absolute top-3 right-3"
+                            className="absolute top-2 right-2"
                         >
                             <button
                                 type="button"
@@ -189,30 +204,30 @@ export default function Index({ user }: Props) {
                                 }
                                 aria-label="Cover photo options"
                                 aria-expanded={coverMenuOpen}
-                                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-black/60 focus-visible:opacity-100 sm:opacity-0"
+                                className="flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-black/60 focus-visible:opacity-100 sm:opacity-0"
                             >
-                                <MoreHorizontal className="h-5 w-5" />
+                                <MoreHorizontal className="h-4 w-4" />
                             </button>
 
                             {coverMenuOpen && (
-                                <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-md border bg-background shadow-lg">
+                                <div className="absolute right-0 mt-2 w-44 overflow-hidden rounded-md border bg-background shadow-lg">
                                     <button
                                         type="button"
                                         onClick={() =>
                                             coverInputRef.current?.click()
                                         }
-                                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-muted"
+                                        className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-muted"
                                     >
-                                        <Upload className="h-4 w-4" />
+                                        <Upload className="h-3.5 w-3.5" />
                                         Upload cover photo
                                     </button>
                                     <button
                                         type="button"
                                         onClick={handleRemoveCover}
                                         disabled={!activeCover}
-                                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-red-500 hover:bg-muted disabled:cursor-not-allowed disabled:text-muted-foreground disabled:hover:bg-transparent"
+                                        className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm text-red-500 hover:bg-muted disabled:cursor-not-allowed disabled:text-muted-foreground disabled:hover:bg-transparent"
                                     >
-                                        <Trash2 className="h-4 w-4" />
+                                        <Trash2 className="h-3.5 w-3.5" />
                                         Remove cover photo
                                     </button>
                                 </div>
@@ -229,17 +244,17 @@ export default function Index({ user }: Props) {
                     </div>
 
                     {coverError && (
-                        <p className="px-6 pt-2 text-sm text-red-500">
+                        <p className="px-4 pt-2 text-xs text-red-500">
                             {coverError}
                         </p>
                     )}
 
-                    <div className="px-6 pb-6">
-                        <div className="-mt-12 flex flex-col items-center gap-4 sm:-mt-16 sm:flex-row sm:items-end">
+                    <div className="px-4 py-4 ">
+                        <div className="mt-8 flex flex-col items-center gap-3 sm:-mt-10 sm:flex-row sm:items-end ">
                             <button
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="group relative h-24 w-24 shrink-0 overflow-hidden rounded-full border-4 border-background bg-slate-200 text-2xl font-semibold shadow-md sm:h-32 sm:w-32 dark:bg-slate-700"
+                                className="group relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-4 border-background bg-slate-200 text-lg font-semibold shadow-md sm:h-20 sm:w-20 dark:bg-slate-700"
                             >
                                 {preview || user.avatar_path ? (
                                     <img
@@ -253,10 +268,10 @@ export default function Index({ user }: Props) {
                                     </span>
                                 )}
 
-                                <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/0 text-transparent transition-colors group-hover:bg-black/50 group-hover:text-white group-focus-visible:bg-black/50 group-focus-visible:text-white">
-                                    <Camera className="h-6 w-6" />
-                                    <span className="text-xs font-medium">
-                                        Upload photo
+                                <div className=" cursor-pointer absolute inset-0 flex flex-col items-center justify-center gap-0.5 bg-black/0 text-transparent transition-colors group-hover:bg-black/50 group-hover:text-white group-focus-visible:bg-black/50 group-focus-visible:text-white">
+                                    <Camera className="h-4 w-4" />
+                                    <span className="text-[10px] font-medium">
+                                        Upload
                                     </span>
                                 </div>
                             </button>
@@ -270,14 +285,14 @@ export default function Index({ user }: Props) {
                             />
 
                             <div className="flex flex-col items-center pb-1 text-center sm:items-start sm:text-left">
-                                <h1 className="text-xl font-semibold">
+                                <h1 className="text-base font-semibold">
                                     {fullName}
                                 </h1>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-xs text-muted-foreground">
                                     @{user.username}
                                 </p>
                                 {error && (
-                                    <p className="mt-1 text-sm text-red-500">
+                                    <p className="mt-1 text-xs text-red-500">
                                         {error}
                                     </p>
                                 )}
@@ -286,91 +301,121 @@ export default function Index({ user }: Props) {
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-6">
-                    <div className="rounded-lg border p-6">
-                        <h2 className="mb-4 text-lg font-medium">Account</h2>
-                        <dl className="grid grid-cols-2 gap-4 text-sm">
-                            <div>
-                                <dt className="text-muted-foreground">
-                                    Username
-                                </dt>
-                                <dd>{user.username}</dd>
-                            </div>
-                            <div>
-                                <dt className="text-muted-foreground">Email</dt>
-                                <dd>{user.email}</dd>
-                            </div>
-                        </dl>
-                    </div>
+                {/* Tabs */}
+                <Tabs defaultValue="overview" className="w-full">
+                    <TabsList>
+                        <TabsTrigger className="cursor-pointer" value="overview">Overview</TabsTrigger>
+                        <TabsTrigger className="cursor-pointer" value="documents">Documents</TabsTrigger>
+                        <TabsTrigger className="cursor-pointer" value="business">Business</TabsTrigger>
+                    </TabsList>
 
-                    {user.information && (
-                        <div className="rounded-lg border p-6">
-                            <h2 className="mb-4 text-lg font-medium">
-                                Personal Information
+                    <TabsContent
+                        value="overview"
+                        className="flex flex-col gap-4"
+                    >
+                        <div className="rounded-lg border p-4">
+                            <h2 className="mb-3 text-sm font-medium">
+                                Account
                             </h2>
-                            <dl className="grid grid-cols-2 gap-4 text-sm">
+                            <dl className="grid grid-cols-2 gap-3 text-sm">
                                 <div>
-                                    <dt className="text-muted-foreground">
-                                        First name
+                                    <dt className="text-xs text-muted-foreground">
+                                        Username
                                     </dt>
-                                    <dd>{user.information.first_name}</dd>
+                                    <dd>{user.username}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-muted-foreground">
-                                        Last name
+                                    <dt className="text-xs text-muted-foreground">
+                                        Email
                                     </dt>
-                                    <dd>{user.information.last_name}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">
-                                        Middle name
-                                    </dt>
-                                    <dd>
-                                        {user.information.middle_name ?? '—'}
-                                    </dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">
-                                        Gender
-                                    </dt>
-                                    <dd>{user.information.gender ?? '—'}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">
-                                        Birthdate
-                                    </dt>
-                                    <dd>{user.information.birthdate ?? '—'}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">
-                                        Contact no.
-                                    </dt>
-                                    <dd>
-                                        {user.information.contact_no ?? '—'}
-                                    </dd>
-                                </div>
-                                <div className="col-span-2">
-                                    <dt className="text-muted-foreground">
-                                        Address
-                                    </dt>
-                                    <dd>
-                                        {[
-                                            user.information.address,
-                                            user.information.barangay,
-                                            user.information.city,
-                                            user.information.region,
-                                        ]
-                                            .filter(Boolean)
-                                            .join(', ') || '—'}
-                                    </dd>
+                                    <dd>{user.email}</dd>
                                 </div>
                             </dl>
                         </div>
-                    )}
 
-                    {/* Once UserDocuments and Shops relations are ready, add similar
-                        <div className="rounded-lg border p-6"> blocks for each here. */}
-                </div>
+                        {user.information && (
+                            <div className="rounded-lg border p-4">
+                                <h2 className="mb-3 text-sm font-medium">
+                                    Personal Information
+                                </h2>
+                                <dl className="grid grid-cols-2 gap-3 text-sm">
+                                    <div>
+                                        <dt className="text-xs text-muted-foreground">
+                                            First name
+                                        </dt>
+                                        <dd>{user.information.first_name}</dd>
+                                    </div>
+                                    <div>
+                                        <dt className="text-xs text-muted-foreground">
+                                            Last name
+                                        </dt>
+                                        <dd>{user.information.last_name}</dd>
+                                    </div>
+                                    <div>
+                                        <dt className="text-xs text-muted-foreground">
+                                            Middle name
+                                        </dt>
+                                        <dd>
+                                            {user.information.middle_name ??
+                                                '—'}
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt className="text-xs text-muted-foreground">
+                                            Gender
+                                        </dt>
+                                        <dd>
+                                            {user.information.gender ?? '—'}
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt className="text-xs text-muted-foreground">
+                                            Birthdate
+                                        </dt>
+                                        <dd>
+                                            {user.information.birthdate ??
+                                                '—'}
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt className="text-xs text-muted-foreground">
+                                            Contact no.
+                                        </dt>
+                                        <dd>
+                                            {user.information.contact_no ??
+                                                '—'}
+                                        </dd>
+                                    </div>
+                                    <div className="col-span-2">
+                                        <dt className="text-xs text-muted-foreground">
+                                            Address
+                                        </dt>
+                                        <dd>
+                                            {[
+                                                user.information.address,
+                                                user.information.barangay,
+                                                user.information.city,
+                                                user.information.region,
+                                            ]
+                                                .filter(Boolean)
+                                                .join(', ') || '—'}
+                                        </dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        )}
+                    </TabsContent>
+
+                    <TabsContent value="documents">
+                        <div className="rounded-lg border p-4 text-sm text-muted-foreground">
+                            No documents uploaded yet.
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="business">
+                        <Business shop={user.shop ?? null} username={user.username} isOwner={true}/>
+                    </TabsContent>
+                </Tabs>
             </div>
 
             <ImageCropModal

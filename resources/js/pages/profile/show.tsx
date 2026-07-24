@@ -1,5 +1,13 @@
 import { Head } from '@inertiajs/react';
 import { dashboard } from '@/routes';
+import { Store } from 'lucide-react';
+import { Business } from './components/business';
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from '@/components/ui/tabs';
 
 type UserInformation = {
     id: number;
@@ -22,6 +30,21 @@ type User = {
     information: UserInformation | null;
     avatar_url?: string | null;
     cover_url?: string | null;
+
+    shop?: {
+        id: number;
+        uuid: string;
+        business_name: string;
+        business_description: string | null;
+        logo_path: string | null;
+        logo_url?: string | null;
+        region: string | null;
+        city: string | null;
+        barangay: string | null;
+        address: string | null;
+        contact_no: string | null;
+        status: number;
+    } | null;
 };
 
 type Props = {
@@ -38,17 +61,18 @@ function getInitials(user: User) {
 
 export default function Show({ user }: Props) {
     const fullName = user.information
-        ? [user.information.first_name, user.information.last_name].filter(Boolean).join(' ')
+        ? [user.information.first_name, user.information.last_name]
+            .filter(Boolean)
+            .join(' ')
         : user.username;
 
     return (
         <>
             <Head title={fullName} />
-
-            <div className="my-10 flex flex-col gap-6">
+            <div className="my-6 flex flex-col gap-4">
                 <div className="overflow-hidden rounded-lg border">
-                    {/* Banner — no menu, no upload, just display */}
-                    <div className="relative h-48 w-full bg-olive-500 sm:h-64">
+                    {/* Banner - read only, no upload controls */}
+                    <div className="relative h-32 w-full bg-olive-500 sm:h-40">
                         {user.cover_url && (
                             <img
                                 src={user.cover_url}
@@ -58,10 +82,9 @@ export default function Show({ user }: Props) {
                         )}
                     </div>
 
-                    <div className="px-6 pb-6">
-                        <div className="-mt-12 flex flex-col items-center gap-4 sm:-mt-16 sm:flex-row sm:items-end">
-                            {/* Avatar — plain div, no button/click/hover overlay */}
-                            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full border-4 border-background bg-slate-200 text-2xl font-semibold shadow-md sm:h-32 sm:w-32 dark:bg-slate-700">
+                    <div className="px-4 py-4">
+                        <div className="-mt-8 flex flex-col items-center gap-3 sm:-mt-10 sm:flex-row sm:items-end">
+                            <div className="relative z-20 h-16 w-16 shrink-0 overflow-hidden rounded-full border-4 border-background bg-slate-200 text-lg font-semibold shadow-md sm:h-20 sm:w-20 dark:bg-slate-700">
                                 {user.avatar_url ? (
                                     <img
                                         src={user.avatar_url}
@@ -76,71 +99,93 @@ export default function Show({ user }: Props) {
                             </div>
 
                             <div className="flex flex-col items-center pb-1 text-center sm:items-start sm:text-left">
-                                <h1 className="text-xl font-semibold">{fullName}</h1>
-                                <p className="text-sm text-muted-foreground">@{user.username}</p>
+                                <h1 className="text-base font-semibold">
+                                    {fullName}
+                                </h1>
+                                <p className="text-xs text-muted-foreground">
+                                    @{user.username}
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-6">
-                    <div className="rounded-lg border p-6">
-                        <h2 className="mb-4 text-lg font-medium">Account</h2>
-                        <dl className="grid grid-cols-2 gap-4 text-sm">
-                            <div>
-                                <dt className="text-muted-foreground">Username</dt>
-                                <dd>{user.username}</dd>
-                            </div>
-                            <div>
-                                <dt className="text-muted-foreground">Email</dt>
-                                <dd>{user.email}</dd>
-                            </div>
-                        </dl>
-                    </div>
+                {/* Tabs - no Documents tab, this is a public/other-user view */}
+                <Tabs defaultValue="overview" className="w-full">
+                    <TabsList>
+                        <TabsTrigger className="cursor-pointer" value="overview">
+                            Overview
+                        </TabsTrigger>
+                        <TabsTrigger className="cursor-pointer" value="business">
+                            <Store className="h-3.5 w-3.5" />
+                            Business
+                        </TabsTrigger>
+                    </TabsList>
 
-                    {user.information && (
-                        <div className="rounded-lg border p-6">
-                            <h2 className="mb-4 text-lg font-medium">Personal Information</h2>
-                            <dl className="grid grid-cols-2 gap-4 text-sm">
+                    <TabsContent
+                        value="overview"
+                        className="flex flex-col gap-4"
+                    >
+                        <div className="rounded-lg border p-4">
+                            <h2 className="mb-3 text-sm font-medium">
+                                Account
+                            </h2>
+                            <dl className="grid grid-cols-2 gap-3 text-sm">
                                 <div>
-                                    <dt className="text-muted-foreground">First name</dt>
-                                    <dd>{user.information.first_name}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">Last name</dt>
-                                    <dd>{user.information.last_name}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">Middle name</dt>
-                                    <dd>{user.information.middle_name ?? '—'}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">Gender</dt>
-                                    <dd>{user.information.gender ?? '—'}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">Birthdate</dt>
-                                    <dd>{user.information.birthdate ?? '—'}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">Contact no.</dt>
-                                    <dd>{user.information.contact_no ?? '—'}</dd>
-                                </div>
-                                <div className="col-span-2">
-                                    <dt className="text-muted-foreground">Address</dt>
-                                    <dd>
-                                        {[user.information.address, user.information.barangay, user.information.city, user.information.region]
-                                            .filter(Boolean)
-                                            .join(', ') || '—'}
-                                    </dd>
+                                    <dt className="text-xs text-muted-foreground">
+                                        Username
+                                    </dt>
+                                    <dd>{user.username}</dd>
                                 </div>
                             </dl>
                         </div>
-                    )}
 
-                    {/* Once UserDocuments and Shops relations are ready, add similar
-                        <div className="rounded-lg border p-6"> blocks for each here. */}
-                </div>
+                        {user.information && (
+                            <div className="rounded-lg border p-4">
+                                <h2 className="mb-3 text-sm font-medium">
+                                    Personal Information
+                                </h2>
+                                <dl className="grid grid-cols-2 gap-3 text-sm">
+                                    <div>
+                                        <dt className="text-xs text-muted-foreground">
+                                            First name
+                                        </dt>
+                                        <dd>{user.information.first_name}</dd>
+                                    </div>
+                                    <div>
+                                        <dt className="text-xs text-muted-foreground">
+                                            Last name
+                                        </dt>
+                                        <dd>{user.information.last_name}</dd>
+                                    </div>
+                                    <div className="col-span-2">
+                                        <dt className="text-xs text-muted-foreground">
+                                            Address
+                                        </dt>
+                                        <dd>
+                                            {[
+                                                user.information.address,
+                                                user.information.barangay,
+                                                user.information.city,
+                                                user.information.region,
+                                            ]
+                                                .filter(Boolean)
+                                                .join(', ') || '—'}
+                                        </dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        )}
+                    </TabsContent>
+
+                    <TabsContent value="business">
+                        <Business
+                            shop={user.shop ?? null}
+                            username={user.username}
+                            isOwner={false}
+                        />
+                    </TabsContent>
+                </Tabs>
             </div>
         </>
     );

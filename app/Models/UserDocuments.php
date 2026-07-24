@@ -13,7 +13,9 @@ class UserDocuments extends Model
         'user_id',
         'document_type',
         'file_path',
+        'file_path_2',
         'original_filename',
+        'original_filename_2',
         'status',
         'rejection_reason',
     ];

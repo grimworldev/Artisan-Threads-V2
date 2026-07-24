@@ -74,7 +74,7 @@ class User extends Authenticatable implements PasskeyUser
 
     public function shop(): HasOne
     {
-        return $this->hasOne(Shops::class);
+         return $this->hasOne(Shops::class, 'user_id');
     }
 
     public function documents(): HasMany
