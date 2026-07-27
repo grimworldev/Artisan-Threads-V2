@@ -68,27 +68,16 @@ export function Business({ shop, username, isOwner }: Props) {
                         <Store className="h-5 w-5 text-muted-foreground" />
                     </div>
                 )}
-                <div>
+                <div className='md:min-h-60 min-h-32 w-full'>
                     <div className="mb-3 flex items-center gap-1.5">
                         <h3 className="text-lg md:text-2xl font-semibold">
                             {shop.business_name}
                         </h3>
-                        {isVerified ? (
-                            <span className="flex justify-center text-white bg-blue-400 px-2 py-1 rounded-full">
-                                <BadgeCheck
-                                    className="h-4 w-4 shrink-0"
-                                    aria-label="Verified business"
-                                />
-                                <span className="text-xs font-medium text-left">Verified</span>
-                            </span>
-                        ) : (
-                            <span className="flex justify-center text-muted-foreground">
-                                <BadgeX
-                                    className="h-4 w-4 shrink-0"
-                                    aria-label="Unverified business"
-                                />
-                                <span className="text-xs font-medium">Unverified</span>
-                            </span>
+                        {isVerified && (
+                            <BadgeCheck
+                                className="h-6 w-6 shrink-0 fill-blue-500 text-background"
+                                aria-label="Verified"
+                            />
                         )}
                     </div>
                     {shop.business_description && (

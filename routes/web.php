@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopsController;
+use App\Http\Controllers\ShopsProductsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDocumentsController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profiles/{username}/account/verification', [ProfileController::class, 'documentCreate'])->name('profile.document.create');
     // Resource for Profile, For Personal Account details
     Route::resource('profiles', ProfileController::class);
+    Route::resource('shops/products', ShopsProductsController::class);
     Route::resource('shops', ShopsController::class);
     Route::resource('documents', UserDocumentsController::class);
 });

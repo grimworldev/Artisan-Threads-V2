@@ -27,7 +27,7 @@ import { DocumentsBanner } from '../banners/documents-banner';
 // Philippine government-issued ID types commonly accepted for KYC/verification.
 // `sides: 2` means the ID has a front and back that both need to be captured;
 // a passport only has a single bio-data page, so it stays at 1.
-const ID_TYPES = [
+export const ID_TYPES = [
     { value: 'philippine_passport', label: 'Philippine Passport', sides: 1 },
     { value: 'philsys_national_id', label: 'PhilSys National ID', sides: 2 },
     { value: 'drivers_license', label: "Driver's License (LTO)", sides: 2 },

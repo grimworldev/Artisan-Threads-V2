@@ -81,6 +81,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                 tabIndex={4}
                                 disabled={processing}
                                 data-test="login-button"
+                                variant="olive"
                             >
                                 {processing && <Spinner />}
                                 Log in

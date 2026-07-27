@@ -11,7 +11,7 @@ export default function AuthSplitLayout({
             </div>
             {/* RIGHT SIDE DETAILS */}
             <div className="w-full">
-                <div className="mx-auto flex w-full max-w-sm flex-col justify-center px-6 sm:max-w-md sm:px-8 lg:max-w-lg lg:px-10">
+                <div className=" px-10">
                     <div className="flex flex-col items-start gap-2 text-left sm:items-center sm:text-center">
                         <h1 className="text-xl font-medium">{title}</h1>
                         <p className="text-sm text-balance text-muted-foreground">

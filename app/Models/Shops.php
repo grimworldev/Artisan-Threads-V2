@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Shops extends Model
 {
@@ -49,12 +50,17 @@ class Shops extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function products(): HasMany
+    {
+        return $this->hasMany(ShopsProducts::class, 'shop_id');
+    }
+
     protected function logoUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->logo_path
-                ? Storage::disk('public')->url($this->logo_path)
-                : null,
+            get: fn() => $this->logo_path
+            ? Storage::disk('public')->url($this->logo_path)
+            : null,
         );
     }
 }

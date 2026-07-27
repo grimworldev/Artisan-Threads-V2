@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Shops;
 use App\Models\User;
+use App\Models\UserDocuments;
 use App\Models\UserInformations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +48,12 @@ class ProfileController extends Controller
     public function show(string $uuid)
     {
         if (Auth::check() && Auth::user()->username === $uuid) {
-            $user = Auth::user()->load(['information', 'shop', 'documents']);
+            $user = Auth::user()->load([
+                'information',
+                'shop.products' => fn($query) => $query->where('status', '!=', \App\Models\ShopsProducts::STATUS_REMOVED),
+                'shop.products.primaryImage',
+                'documents',
+            ]);
 
             return inertia('profile/index', [
                 'user' => $user,
@@ -54,7 +61,11 @@ class ProfileController extends Controller
         }
 
         $user = User::where('username', $uuid)
-            ->with(['information', 'shop'])
+            ->with([
+                'information',
+                'shop.products' => fn($query) => $query->where('status', \App\Models\ShopsProducts::STATUS_ACTIVE),
+                'shop.products.primaryImage',
+            ])
             ->firstOrFail();
 
         return inertia('profile/show', [
@@ -153,11 +164,27 @@ class ProfileController extends Controller
             abort(404);
         }
 
+        // Already has a shop registered — nothing to create here.
+        $hasShop = Shops::where('user_id', Auth::id())->exists();
+
+        if ($hasShop) {
+            abort(404);
+        }
+
         return inertia('profile/partials/business-registration');
     }
     public function documentCreate($username)
     {
         if (!Auth::check() || Auth::user()->username !== $username) {
+            abort(404);
+        }
+
+        // Already verified (status 1) — no need to submit documents again.
+        $isVerified = UserDocuments::where('user_id', Auth::id())
+            ->where('status', 1)
+            ->exists();
+
+        if ($isVerified) {
             abort(404);
         }
 

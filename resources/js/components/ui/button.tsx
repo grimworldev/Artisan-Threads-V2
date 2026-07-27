@@ -10,17 +10,25 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+          "cursor-pointer bg-olive-600 text-white shadow-xs hover:bg-olive-700",
+
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
+          "cursor-pointer bg-red-600 text-white shadow-xs hover:bg-red-700 focus-visible:ring-red-500/20",
+
         outline:
-          "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground",
+          "cursor-pointer border border-olive-600 bg-white text-olive-700 shadow-xs hover:bg-olive-50 hover:text-olive-800",
+
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "cursor-pointer bg-olive-100 text-olive-900 shadow-xs hover:bg-olive-200",
+
+        ghost:
+          "cursor-pointer text-olive-700 hover:bg-olive-100 hover:text-olive-900",
+
+        link:
+          "cursor-pointer text-olive-700 underline-offset-4 hover:text-olive-800 hover:underline",
+
         olive:
-          "bg-olive-500 text-white shadow-xs hover:bg-olive-400",
+          "cursor-pointer bg-olive-600 text-white shadow-xs hover:bg-olive-700",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

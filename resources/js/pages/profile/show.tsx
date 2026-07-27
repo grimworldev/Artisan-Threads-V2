@@ -8,6 +8,8 @@ import {
     TabsList,
     TabsTrigger,
 } from '@/components/ui/tabs';
+import { ProfileHeader } from './components/profile';
+import { Products } from './components/products';
 
 type UserInformation = {
     id: number;
@@ -21,6 +23,21 @@ type UserInformation = {
     barangay: string | null;
     address: string | null;
     contact_no: string | null;
+};
+
+type ProductImage = {
+    id: number;
+    image_url: string;
+    is_primary: boolean;
+};
+
+type Product = {
+    uuid: string;
+    product_name: string;
+    price: string;
+    quantity: number;
+    status: number;
+    primary_image: ProductImage | null;
 };
 
 type User = {
@@ -44,6 +61,7 @@ type User = {
         address: string | null;
         contact_no: string | null;
         status: number;
+        products?: Product[];
     } | null;
 };
 
@@ -70,45 +88,11 @@ export default function Show({ user }: Props) {
         <>
             <Head title={fullName} />
             <div className="my-6 flex flex-col gap-4">
-                <div className="overflow-hidden rounded-lg border">
-                    {/* Banner - read only, no upload controls */}
-                    <div className="relative h-32 w-full bg-olive-500 sm:h-40">
-                        {user.cover_url && (
-                            <img
-                                src={user.cover_url}
-                                alt="Cover photo"
-                                className="h-full w-full object-cover"
-                            />
-                        )}
-                    </div>
-
-                    <div className="px-4 py-4">
-                        <div className="-mt-8 flex flex-col items-center gap-3 sm:-mt-10 sm:flex-row sm:items-end">
-                            <div className="relative z-20 h-16 w-16 shrink-0 overflow-hidden rounded-full border-4 border-background bg-slate-200 text-lg font-semibold shadow-md sm:h-20 sm:w-20 dark:bg-slate-700">
-                                {user.avatar_url ? (
-                                    <img
-                                        src={user.avatar_url}
-                                        alt={fullName}
-                                        className="h-full w-full object-cover"
-                                    />
-                                ) : (
-                                    <span className="flex h-full w-full items-center justify-center text-slate-600 dark:text-slate-200">
-                                        {getInitials(user)}
-                                    </span>
-                                )}
-                            </div>
-
-                            <div className="flex flex-col items-center pb-1 text-center sm:items-start sm:text-left">
-                                <h1 className="text-base font-semibold">
-                                    {fullName}
-                                </h1>
-                                <p className="text-xs text-muted-foreground">
-                                    @{user.username}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ProfileHeader
+                    user={user}
+                    fullName={fullName}
+                    initials={getInitials(user)}
+                />
 
                 {/* Tabs - no Documents tab, this is a public/other-user view */}
                 <Tabs defaultValue="overview" className="w-full">
@@ -178,12 +162,19 @@ export default function Show({ user }: Props) {
                         )}
                     </TabsContent>
 
-                    <TabsContent value="business">
+                    <TabsContent value="business" className="flex flex-col gap-6">
                         <Business
                             shop={user.shop ?? null}
                             username={user.username}
                             isOwner={false}
                         />
+
+                        {user.shop && (
+                            <div>
+                                <h2 className="mb-3 text-sm font-medium">Products</h2>
+                                <Products products={user.shop.products ?? []} />
+                            </div>
+                        )}
                     </TabsContent>
                 </Tabs>
             </div>

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class UserDocuments extends Model
 {
@@ -30,5 +31,17 @@ class UserDocuments extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected $appends = ['file_url', 'file_2_url'];
+
+    public function getFileUrlAttribute(): ?string
+    {
+        return $this->file_path ? Storage::url($this->file_path) : null;
+    }
+
+    public function getFile2UrlAttribute(): ?string
+    {
+        return $this->file_path_2 ? Storage::url($this->file_path_2) : null;
     }
 }

@@ -22,7 +22,7 @@ export function ImageCropModal({ open, imageSrc, aspect, cropShape = 'rect', onC
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
             <div className="flex w-full max-w-2xl flex-col gap-4 rounded-lg bg-background p-4">
-                <div className="relative min-h-96 w-full overflow-hidden rounded-md bg-black">
+                <div className="relative min-h-96 w-full overflow-hidden rounded-md bg-white">
                     <Cropper
                         image={imageSrc}
                         crop={crop}

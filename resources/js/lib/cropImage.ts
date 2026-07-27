@@ -23,6 +23,11 @@ export async function getCroppedImageBlob(
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Canvas not supported');
 
+    // Fill white first so transparent PNG areas don't default to black
+    // once flattened into JPEG.
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, crop.width, crop.height);
+
     ctx.drawImage(image, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
 
     return new Promise((resolve, reject) => {

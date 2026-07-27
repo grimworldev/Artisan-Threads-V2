@@ -1,8 +1,17 @@
-import { ShieldCheck } from "lucide-react";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
 
 export function DocumentsBanner() {
     return (
         <div className="relative overflow-hidden rounded-xl border bg-linear-to-r from-olive-600 via-olive-500 to-stone-600 p-8 text-white my-6">
+            <button
+                type="button"
+                onClick={() => window.history.back()}
+                className=" cursor-pointer mb-4 inline-flex items-center gap-1.5 rounded-md bg-white/10 px-3 py-1.5 text-sm font-medium backdrop-blur transition-colors hover:bg-white/20"
+            >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+            </button>
+
             <div className="flex items-center gap-6">
                 <div className="max-w-2xl">
                     <span className="mb-3 inline-flex rounded-full bg-white/20 px-3 py-1 text-sm font-medium backdrop-blur">

@@ -412,7 +412,7 @@ export default function Register({ passwordRules }: Props) {
                             Back
                         </Button>
                     )}
-                    <Button type="submit" className="w-full" variant="outline" disabled={form.processing}>
+                    <Button type="submit" className="w-full" variant="default" disabled={form.processing}>
                         {form.processing && <Spinner />}
                         {isLastStep ? 'Create account' : 'Next'}
                     </Button>

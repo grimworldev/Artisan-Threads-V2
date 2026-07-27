@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Shops;
+use App\Models\ShopsProducts;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,13 @@ class ShopsController extends Controller
      */
     public function index()
     {
-        //
+        $shops = Shops::with('user:id,username,uuid')
+            ->latest()
+            ->get();
+
+        return inertia('shops/index', [
+            'shops' => $shops,
+        ]);
     }
 
     /**
@@ -64,9 +71,19 @@ class ShopsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Shops $shops)
+    public function show(string $uuid)
     {
-        //
+        $shop = Shops::where('uuid', $uuid)->firstOrFail();
+
+        $products = ShopsProducts::where('shop_id', $shop->id)
+            ->where('status', '!=', ShopsProducts::STATUS_REMOVED)
+            ->with('primaryImage')
+            ->get();
+
+        return inertia('shops/show', [
+            'shops' => $shop,
+            'products' => $products,
+        ]);
     }
 
     /**
