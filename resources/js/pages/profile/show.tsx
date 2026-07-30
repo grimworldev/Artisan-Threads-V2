@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/tabs';
 import { ProfileHeader } from './components/profile';
 import { Products } from './components/products';
+import { PersonalInformation } from './components/information';
 
 type UserInformation = {
     id: number;
@@ -101,7 +102,6 @@ export default function Show({ user }: Props) {
                             Overview
                         </TabsTrigger>
                         <TabsTrigger className="cursor-pointer" value="business">
-                            <Store className="h-3.5 w-3.5" />
                             Business
                         </TabsTrigger>
                     </TabsList>
@@ -110,55 +110,12 @@ export default function Show({ user }: Props) {
                         value="overview"
                         className="flex flex-col gap-4"
                     >
-                        <div className="rounded-lg border p-4">
-                            <h2 className="mb-3 text-sm font-medium">
-                                Account
-                            </h2>
-                            <dl className="grid grid-cols-2 gap-3 text-sm">
-                                <div>
-                                    <dt className="text-xs text-muted-foreground">
-                                        Username
-                                    </dt>
-                                    <dd>{user.username}</dd>
-                                </div>
-                            </dl>
-                        </div>
-
                         {user.information && (
-                            <div className="rounded-lg border p-4">
-                                <h2 className="mb-3 text-sm font-medium">
-                                    Personal Information
-                                </h2>
-                                <dl className="grid grid-cols-2 gap-3 text-sm">
-                                    <div>
-                                        <dt className="text-xs text-muted-foreground">
-                                            First name
-                                        </dt>
-                                        <dd>{user.information.first_name}</dd>
-                                    </div>
-                                    <div>
-                                        <dt className="text-xs text-muted-foreground">
-                                            Last name
-                                        </dt>
-                                        <dd>{user.information.last_name}</dd>
-                                    </div>
-                                    <div className="col-span-2">
-                                        <dt className="text-xs text-muted-foreground">
-                                            Address
-                                        </dt>
-                                        <dd>
-                                            {[
-                                                user.information.address,
-                                                user.information.barangay,
-                                                user.information.city,
-                                                user.information.region,
-                                            ]
-                                                .filter(Boolean)
-                                                .join(', ') || '—'}
-                                        </dd>
-                                    </div>
-                                </dl>
-                            </div>
+                            <PersonalInformation
+                                fullName={fullName}
+                                email={user.email}
+                                information={user.information}
+                            />
                         )}
                     </TabsContent>
 

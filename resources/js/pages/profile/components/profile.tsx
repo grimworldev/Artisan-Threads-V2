@@ -14,7 +14,7 @@ export function ProfileHeader({ user, fullName, initials }: ProfileHeaderProps) 
     return (
         <div className="overflow-hidden rounded-lg border">
             {/* Banner - read only, no upload controls */}
-            <div className="relative h-32 w-full bg-olive-500 sm:h-40">
+            <div className="group relative aspect-[3/1] w-full bg-olive-500">
                 {user.cover_url && (
                     <img
                         src={user.cover_url}
@@ -25,8 +25,8 @@ export function ProfileHeader({ user, fullName, initials }: ProfileHeaderProps) 
             </div>
 
             <div className="px-4 py-4">
-                <div className="-mt-8 flex flex-col items-center gap-3 sm:-mt-10 sm:flex-row sm:items-end">
-                    <div className="relative z-20 h-16 w-16 shrink-0 overflow-hidden rounded-full border-4 border-background bg-slate-200 text-lg font-semibold shadow-md sm:h-20 sm:w-20 dark:bg-slate-700">
+                <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-end">
+                    <div className="relative z-20 -mt-10 h-24 w-24 shrink-0 overflow-hidden rounded-full border-4 border-background bg-slate-200 text-xl font-semibold shadow-md sm:-mt-16 sm:h-32 sm:w-32 dark:bg-slate-700">
                         {user.avatar_url ? (
                             <img
                                 src={user.avatar_url}
@@ -40,9 +40,9 @@ export function ProfileHeader({ user, fullName, initials }: ProfileHeaderProps) 
                         )}
                     </div>
 
-                    <div className="flex flex-col items-center pb-1 text-center sm:items-start sm:text-left">
-                        <h1 className="text-base font-semibold">{fullName}</h1>
-                        <p className="text-xs text-muted-foreground">
+                    <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
+                        <h1 className="text-lg font-semibold sm:text-xl">{fullName}</h1>
+                        <p className="text-sm text-muted-foreground">
                             @{user.username}
                         </p>
                     </div>

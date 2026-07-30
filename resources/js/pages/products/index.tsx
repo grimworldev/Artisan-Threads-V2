@@ -43,13 +43,13 @@ export default function Index({ products }: Props) {
                 {products.length === 0 ? (
                     <p className="text-sm text-muted-foreground">No products yet.</p>
                 ) : (
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
                         {products.map((product) => (
                             <div
                                 key={product.uuid}
-                                className="flex flex-col overflow-hidden rounded-lg border bg-background transition-shadow hover:shadow-md"
+                                className="flex flex-col overflow-hidden rounded-lg border bg-background transition-shadow hover:shadow-mdd"
                             >
-                                <div className="flex h-32 items-center justify-center bg-muted">
+                                <div className="aspect-square w-full overflow-hidden bg-muted">
                                     {product.primary_image ? (
                                         <img
                                             src={product.primary_image.image_url}
@@ -57,13 +57,15 @@ export default function Index({ products }: Props) {
                                             className="h-full w-full object-cover"
                                         />
                                     ) : (
-                                        <Package className="h-8 w-8 text-muted-foreground" />
+                                        <div className="flex h-full w-full items-center justify-center">
+                                            <Package className="h-8 w-8 text-muted-foreground" />
+                                        </div>
                                     )}
                                 </div>
 
-                                <div className="flex flex-1 flex-col gap-2 p-4">
+                                <div className="flex flex-1 flex-col gap-2 p-3 sm:p-4">
                                     <div>
-                                        <h2 className="text-base font-medium capitalize">
+                                        <h2 className="text-sm font-medium sm:text-base capitalize">
                                             {product.product_name}
                                         </h2>
                                         <p className="text-sm text-muted-foreground">
@@ -71,7 +73,7 @@ export default function Index({ products }: Props) {
                                         </p>
                                     </div>
 
-                                    <dl className="mt-1 flex flex-col gap-1 text-xs text-muted-foreground">
+                                    <dl className="text-xs font-semibold text-muted-foreground sm:text-sm">
                                         <div className="flex items-center gap-1">
                                             <span>{formatPrice(product.price)}</span>
                                         </div>

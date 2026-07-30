@@ -1,7 +1,7 @@
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import { BadgeCheck } from 'lucide-react';
-import { ProductList } from './components/product-list';
+import { ProductList, type Product } from './components/product-list';
 
 type Shop = {
     id: number;
@@ -21,17 +21,6 @@ type Shop = {
         username: string;
         uuid: string;
     };
-};
-
-type Product = {
-    id: number;
-    uuid: string;
-    name: string;
-    description: string | null;
-    price: number;
-    stock: number;
-    image_path: string | null;
-    image_url?: string | null;
 };
 
 type Props = {

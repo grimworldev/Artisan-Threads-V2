@@ -84,9 +84,46 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // Only the owner can update their own profile information.
+        // (Swap for a Policy/Gate if you want this centralized.)
+        if ((int) $request->user()->id !== (int) $id) {
+            abort(403);
+        }
+
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $id],
+            'gender' => ['nullable', 'string'],
+            'birthdate' => ['nullable', 'date'],
+            'contact_no' => ['nullable', 'string', 'max:32'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'barangay' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'region' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        // Treat empty strings as "cleared" -> store as null instead of ''
+        $validated = collect($validated)
+            ->map(fn($value) => $value === '' ? null : $value)
+            ->all();
+
+        // Email lives on the user itself
+        $user->update(['email' => $validated['email']]);
+        unset($validated['email']);
+
+        // Adjust the relation name below if yours differs (e.g. userInformation())
+        $user->information()->updateOrCreate(
+            ['user_id' => $user->id],
+            $validated,
+        );
+
+        return back()->with('success', 'Profile information updated.');
     }
 
     /**

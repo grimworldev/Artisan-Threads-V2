@@ -2,14 +2,14 @@ import { Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Package } from 'lucide-react';
 
-type ProductImage = {
+export type ProductImage = {
     id: number;
     image_path: string;
     image_url: string;
     is_primary: boolean;
 };
 
-type Product = {
+export type Product = {
     id: number;
     uuid: string;
     product_name: string;
@@ -42,7 +42,7 @@ export function ProductList({ products, shopUuid }: Props) {
     }
 
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
             {products.map((product) => (
                 <div
                     key={product.id}
@@ -62,18 +62,18 @@ export function ProductList({ products, shopUuid }: Props) {
                         )}
                     </div>
 
-                    <div className="flex flex-1 flex-col gap-2 p-4">
+                    <div className="flex flex-1 flex-col gap-2 p-3 sm:p-4">
                         <div>
-                            <h3 className="text-base font-medium">
+                            <h3 className="text-sm font-medium sm:text-base capitalize">
                                 {product.product_name}
                             </h3>
-                            <p className="text-sm font-semibold text-muted-foreground">
+                            <p className="text-xs font-semibold text-muted-foreground sm:text-sm">
                                 {formatPrice(product.price)}
                             </p>
                         </div>
 
                         {product.quantity <= 0 && (
-                            <span className="w-fit rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-600 dark:bg-red-950 dark:text-red-400">
+                            <span className="w-fit rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-medium text-red-600 dark:bg-red-950 dark:text-red-400 sm:text-xs">
                                 Out of stock
                             </span>
                         )}
@@ -81,9 +81,10 @@ export function ProductList({ products, shopUuid }: Props) {
                         <Button
                             asChild
                             variant="outline"
-                            className="mt-auto w-full"
+                            size="sm"
+                            className="mt-auto w-full text-xs sm:text-sm"
                         >
-                            <Link href={`/shops/${shopUuid}/products/${product.uuid}`}>
+                            <Link href={`/shops/products/${product.uuid}`}>
                                 View
                             </Link>
                         </Button>

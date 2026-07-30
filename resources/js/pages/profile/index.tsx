@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/tabs';
 import { Documents, type Verification } from './components/documents';
 import { ProfileHeader } from './partials/profile-header';
+import { PersonalInformation } from './partials/profile-information';
 import { Products } from './components/products';
 
 type UserInformation = {
@@ -69,13 +70,11 @@ type User = {
         products?: Product[];
     } | null;
 
-    documents?: Verification[]; // 👈 back to array
-
+    documents?: Verification[];
 };
 
 type Props = {
     user: User;
-
 };
 
 function getInitials(user: User) {
@@ -116,96 +115,13 @@ export default function Index({ user }: Props) {
                         value="overview"
                         className="flex flex-col gap-4"
                     >
-                        <div className="rounded-lg border p-4">
-                            <h2 className="mb-3 text-sm font-medium">
-                                Account
-                            </h2>
-                            <dl className="grid grid-cols-2 gap-3 text-sm">
-                                <div>
-                                    <dt className="text-xs text-muted-foreground">
-                                        Username
-                                    </dt>
-                                    <dd>{user.username}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-xs text-muted-foreground">
-                                        Email
-                                    </dt>
-                                    <dd>{user.email}</dd>
-                                </div>
-                            </dl>
-                        </div>
-
                         {user.information && (
-                            <div className="rounded-lg border p-4">
-                                <h2 className="mb-3 text-sm font-medium">
-                                    Personal Information
-                                </h2>
-                                <dl className="grid grid-cols-2 gap-3 text-sm">
-                                    <div>
-                                        <dt className="text-xs text-muted-foreground">
-                                            First name
-                                        </dt>
-                                        <dd>{user.information.first_name}</dd>
-                                    </div>
-                                    <div>
-                                        <dt className="text-xs text-muted-foreground">
-                                            Last name
-                                        </dt>
-                                        <dd>{user.information.last_name}</dd>
-                                    </div>
-                                    <div>
-                                        <dt className="text-xs text-muted-foreground">
-                                            Middle name
-                                        </dt>
-                                        <dd>
-                                            {user.information.middle_name ??
-                                                '—'}
-                                        </dd>
-                                    </div>
-                                    <div>
-                                        <dt className="text-xs text-muted-foreground">
-                                            Gender
-                                        </dt>
-                                        <dd>
-                                            {user.information.gender ?? '—'}
-                                        </dd>
-                                    </div>
-                                    <div>
-                                        <dt className="text-xs text-muted-foreground">
-                                            Birthdate
-                                        </dt>
-                                        <dd>
-                                            {user.information.birthdate ??
-                                                '—'}
-                                        </dd>
-                                    </div>
-                                    <div>
-                                        <dt className="text-xs text-muted-foreground">
-                                            Contact no.
-                                        </dt>
-                                        <dd>
-                                            {user.information.contact_no ??
-                                                '—'}
-                                        </dd>
-                                    </div>
-                                    <div className="col-span-2">
-                                        <dt className="text-xs text-muted-foreground">
-                                            Address
-                                        </dt>
-                                        <dd>
-                                            {[
-                                                user.information.address,
-                                                user.information.barangay,
-                                                user.information.city,
-                                                user.information.region,
-                                            ]
-                                                .filter(Boolean)
-                                                .join(', ') || '—'}
-                                        </dd>
-                                    </div>
-                                </dl>
-                            </div>
+                            <PersonalInformation
+                            id={user.id}
+                                username={user.username}
+                                email={user.email}
+                                information={user.information}
+                            />
                         )}
                     </TabsContent>
 

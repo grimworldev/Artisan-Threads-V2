@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Shops;
 use App\Models\ShopsProducts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -109,9 +110,13 @@ class ShopsProductsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ShopsProducts $shopsProducts)
+    public function show(Shops $shop, ShopsProducts $product)
     {
-        //
+        $product->load(['images', 'shop']);
+
+        return inertia('products/show', [
+            'product' => $product,
+        ]);
     }
 
     /**

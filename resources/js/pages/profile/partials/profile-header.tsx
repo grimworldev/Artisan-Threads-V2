@@ -136,8 +136,8 @@ export function ProfileHeader({
     return (
         <>
             <div className="overflow-hidden rounded-lg border">
-                {/* Banner - reduced height */}
-                <div className="group relative h-32 w-full bg-olive-500 sm:h-40">
+                {/* Banner */}
+                <div className="group relative aspect-[3/1] w-full bg-olive-500">
                     {activeCover && (
                         <img
                             src={activeCover}
@@ -193,11 +193,11 @@ export function ProfileHeader({
                 )}
 
                 <div className="px-4 py-4">
-                    <div className="mt-8 flex flex-col items-center gap-3 sm:-mt-10 sm:flex-row sm:items-end">
+                    <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-end">
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="group relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-4 border-background bg-slate-200 text-lg font-semibold shadow-md sm:h-20 sm:w-20 dark:bg-slate-700"
+                            className="group relative -mt-10 h-24 w-24 shrink-0 overflow-hidden rounded-full border-4 border-background bg-slate-200 text-xl font-semibold shadow-md sm:-mt-16 sm:h-32 sm:w-32 dark:bg-slate-700"
                         >
                             {avatarSrc ? (
                                 <img
@@ -212,8 +212,8 @@ export function ProfileHeader({
                             )}
 
                             <div className="cursor-pointer absolute inset-0 flex flex-col items-center justify-center gap-0.5 bg-black/0 text-transparent transition-colors group-hover:bg-black/50 group-hover:text-white group-focus-visible:bg-black/50 group-focus-visible:text-white">
-                                <Camera className="h-4 w-4" />
-                                <span className="text-[10px] font-medium">
+                                <Camera className="h-5 w-5" />
+                                <span className="text-xs font-medium">
                                     Upload
                                 </span>
                             </div>
@@ -226,20 +226,20 @@ export function ProfileHeader({
                             onChange={handleFileChange}
                             className="hidden"
                         />
-
-                        <div className="flex flex-col items-center pb-1 text-center sm:items-start sm:text-left">
+                        {/* FULL NAME */}
+                        <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
                             <div className="flex items-center gap-1">
-                                <h1 className="text-base font-semibold">
+                                <h1 className="text-lg font-semibold sm:text-xl">
                                     {fullName}
                                 </h1>
                                 {isVerified && (
                                     <BadgeCheck
-                                        className="h-4 w-4 shrink-0 fill-blue-500 text-background"
+                                        className="h-5 w-5 shrink-0 fill-blue-500 text-background"
                                         aria-label="Verified"
                                     />
                                 )}
                             </div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-sm text-muted-foreground">
                                 @{user.username}
                             </p>
                             {error && (
